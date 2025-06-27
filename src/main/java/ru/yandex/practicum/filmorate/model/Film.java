@@ -4,6 +4,8 @@ import lombok.Data;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Film.
@@ -15,8 +17,13 @@ public class Film {
     String description;
     LocalDate releaseDate;
     Duration duration;
+    Set<Long> likes;
 
     public long getDuration() {
         return duration.getSeconds();
+    }
+
+    public Film() {
+        likes = new HashSet<>();
     }
 }

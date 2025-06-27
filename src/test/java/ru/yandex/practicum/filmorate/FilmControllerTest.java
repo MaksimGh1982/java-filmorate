@@ -3,9 +3,12 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -16,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 public class FilmControllerTest {
 
-    private static FilmController filmController;
+    private static FilmService filmService;
 
     @BeforeAll
     static void beforeAll() {
-        filmController = new FilmController();
+        filmService = new FilmService(new InMemoryFilmStorage(), new UserService(new InMemoryUserStorage()));
     }
 
     @Test
@@ -30,7 +33,7 @@ public class FilmControllerTest {
         film.setReleaseDate(LocalDate.of(1800, 12, 12));
         film.setDuration(Duration.ofMinutes(180));
         assertThrows(ValidationException.class, () -> {
-            filmController.create(film);
+            filmService.create(film);
         }, "ValidationException was expected");
     }
 
@@ -38,7 +41,7 @@ public class FilmControllerTest {
     void newEmptyFilm() {
         Film film = new Film();
         assertThrows(ValidationException.class, () -> {
-            filmController.create(film);
+            filmService.create(film);
         }, "ValidationException was expected");
     }
 
@@ -48,7 +51,7 @@ public class FilmControllerTest {
         film.setName("Titanic");
         film.setReleaseDate(LocalDate.of(1998, 12, 12));
         film.setDuration(Duration.ofMinutes(180));
-        filmController.create(film);
-        assertEquals(1,filmController.findAll().size());
+        filmService.create(film);
+        assertEquals(1,filmService.findAll().size());
     }
 }
