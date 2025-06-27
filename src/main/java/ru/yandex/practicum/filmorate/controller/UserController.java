@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User findUser(@PathVariable long id) {
-        return userService.FindUserById(id);
+        return userService.findUserById(id);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")

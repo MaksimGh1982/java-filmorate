@@ -49,7 +49,7 @@ public class FilmService {
 
     public void addLike(long filmId, long userId) {
         log.info("Лайк фильм id=" + filmId + " от пользователя id=" + userId);
-        if (userService.FindUserById(userId) == null) {
+        if (userService.findUserById(userId) == null) {
             throw new NotFoundException("Пользователя id = " + userId + " не найден");
         }
         filmStorage.findFilmById(filmId).getLikes().add(userId);

@@ -27,7 +27,7 @@ public class UserService {
         return userStorage.findAll();
     }
 
-    public User FindUserById(long id) {
+    public User findUserById(long id) {
         log.info("Пользователь id=" + id);
         return userStorage.findUserById(id);
     }
