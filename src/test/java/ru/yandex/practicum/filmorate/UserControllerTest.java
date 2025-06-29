@@ -3,9 +3,10 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -15,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 public class UserControllerTest {
 
-    private static UserController userController;
+    private static UserService userService;
 
     @BeforeAll
     static void beforeAll() {
-        userController = new UserController();
+        userService = new UserService(new InMemoryUserStorage());
     }
 
     @Test
@@ -30,7 +31,7 @@ public class UserControllerTest {
         user.setBirthday(LocalDate.of(2000,12,12));
         user.setName("Titanic");
         assertThrows(ValidationException.class, () -> {
-            userController.create(user);
+            userService.create(user);
         }, "ValidationException was expected");
     }
 
@@ -38,7 +39,7 @@ public class UserControllerTest {
     void newEmptyUser() {
         User user = new User();
         assertThrows(ValidationException.class, () -> {
-            userController.create(user);
+            userService.create(user);
         }, "ValidationException was expected");
     }
 
@@ -49,7 +50,7 @@ public class UserControllerTest {
         user.setLogin("login");
         user.setBirthday(LocalDate.of(2000,12,12));
         user.setName("Titanic");
-        userController.create(user);
-        assertEquals(1,userController.findAll().size());
+        userService.create(user);
+        assertEquals(1,userService.findAll().size());
     }
 }
