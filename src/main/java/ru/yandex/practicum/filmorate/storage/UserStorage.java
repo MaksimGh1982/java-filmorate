@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.User;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public interface UserStorage {
     Collection<User> findAll();
@@ -17,7 +16,7 @@ public interface UserStorage {
 
     void deleteFriend(long userId, long friendId);
 
-    public Collection<User> findFriends(long userId);
+    Collection<User> findFriends(long userId);
 
-    public Collection<User> findAcrossFriends(long userId, long otherUserId);
+    Collection<User> findAcrossFriends(long userId, long otherUserId);
 }
