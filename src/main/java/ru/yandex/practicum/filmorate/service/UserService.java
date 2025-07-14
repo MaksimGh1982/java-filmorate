@@ -54,7 +54,6 @@ public class UserService {
     }
 
     public void addFriend(long userId, long friendId) {
-        
         if (findUserById(userId) == null) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         } else if (findUserById(friendId) == null) {
