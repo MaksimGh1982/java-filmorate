@@ -19,8 +19,8 @@ public class MpaDbStorage implements MpaStorage {
     @Override
     public Collection<Mpa> findAll() {
         MpaRowMapper mapper = new MpaRowMapper();
-        List<Mpa> Mpas = jdbcTemplate.query("SELECT * FROM FILMORATE.МРА", mapper);
-        return Mpas;
+        List<Mpa> mPas = jdbcTemplate.query("SELECT * FROM FILMORATE.МРА", mapper);
+        return mPas;
     }
 
     @Override
