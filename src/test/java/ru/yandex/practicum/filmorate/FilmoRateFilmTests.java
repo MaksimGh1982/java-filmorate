@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 
@@ -27,7 +26,7 @@ class FilmoRateFilmTests {
     public void testCreateFilm() {
         Film newFilm = new Film();
         newFilm.setName("name1");
-        newFilm.setReleaseDate(LocalDate.of(1980,12,12));
+        newFilm.setReleaseDate(LocalDate.of(1980, 12, 12));
         newFilm.setDuration(120);
         Optional<Film> filmOptional = Optional.ofNullable(filmStorage.create(newFilm));
 
@@ -38,7 +37,7 @@ class FilmoRateFilmTests {
     public void testFindFilmById() {
         Film newFilm = new Film();
         newFilm.setName("name1");
-        newFilm.setReleaseDate(LocalDate.of(1980,12,12));
+        newFilm.setReleaseDate(LocalDate.of(1980, 12, 12));
         newFilm.setDuration(120);
         Optional<Film> newFilmOptional = Optional.ofNullable(filmStorage.create(newFilm));
 
@@ -54,14 +53,14 @@ class FilmoRateFilmTests {
     public void testUpdateFilm() {
         Film newFilm = new Film();
         newFilm.setName("name1");
-        newFilm.setReleaseDate(LocalDate.of(1980,12,12));
+        newFilm.setReleaseDate(LocalDate.of(1980, 12, 12));
         newFilm.setDuration(120);
         Optional<Film> newFilmOptional = Optional.ofNullable(filmStorage.create(newFilm));
 
         Film upFilm = new Film();
         upFilm.setId(newFilmOptional.get().getId());
         upFilm.setName("UPname1");
-        upFilm.setReleaseDate(LocalDate.of(1990,12,12));
+        upFilm.setReleaseDate(LocalDate.of(1990, 12, 12));
         upFilm.setDuration(160);
 
         Optional<Film> UpFilmOptional = Optional.ofNullable(filmStorage.update(upFilm));

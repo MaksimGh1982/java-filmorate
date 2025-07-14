@@ -27,7 +27,7 @@ class FilmoRateUserTests {
         newUser.setName("name1");
         newUser.setLogin("Login1");
         newUser.setEmail("@email1");
-        newUser.setBirthday(LocalDate.of(1980,12,12));
+        newUser.setBirthday(LocalDate.of(1980, 12, 12));
 
         Optional<User> userOptional = Optional.ofNullable(userStorage.create(newUser));
 
@@ -41,7 +41,7 @@ class FilmoRateUserTests {
         newUser.setName("name1");
         newUser.setLogin("Login1");
         newUser.setEmail("@email1");
-        newUser.setBirthday(LocalDate.of(1980,12,12));
+        newUser.setBirthday(LocalDate.of(1980, 12, 12));
 
         Optional<User> newUserOptional = Optional.ofNullable(userStorage.create(newUser));
 
@@ -59,7 +59,7 @@ class FilmoRateUserTests {
         newUser.setName("name1");
         newUser.setLogin("Login1");
         newUser.setEmail("@email1");
-        newUser.setBirthday(LocalDate.of(1980,12,12));
+        newUser.setBirthday(LocalDate.of(1980, 12, 12));
 
         Optional<User> newUserOptional = Optional.ofNullable(userStorage.create(newUser));
 
@@ -68,7 +68,7 @@ class FilmoRateUserTests {
         upUser.setName("UPname1");
         upUser.setLogin("UPLogin1");
         upUser.setEmail("@UPemail1");
-        upUser.setBirthday(LocalDate.of(1980,12,12));
+        upUser.setBirthday(LocalDate.of(1980, 12, 12));
 
         Optional<User> UpUserOptional = Optional.ofNullable(userStorage.update(upUser));
 
