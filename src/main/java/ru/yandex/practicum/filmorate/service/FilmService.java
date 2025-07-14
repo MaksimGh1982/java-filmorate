@@ -14,7 +14,6 @@ import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -47,7 +46,7 @@ public class FilmService {
     public Film create(Film film) {
         log.info("Добавить фильм");
         validate(film);
-        if (mpaStorage.findMpaById(film.getMpa().getId()) == null && film.getMpa().getId()>0) {
+        if (mpaStorage.findMpaById(film.getMpa().getId()) == null && film.getMpa().getId() > 0) {
             throw new NotFoundException("Рейтинг не найден");
         }
         for (Genre genre : film.getGenres()) {
