@@ -70,7 +70,7 @@ class FilmoRateUserTests {
         upUser.setEmail("@UPemail1");
         upUser.setBirthday(LocalDate.of(1980, 12, 12));
 
-        Optional<User> UpUserOptional = Optional.ofNullable(userStorage.update(upUser));
+        Optional<User> upUserOptional = Optional.ofNullable(userStorage.update(upUser));
 
         Optional<User> userOptional = Optional.ofNullable(userStorage.findUserById(newUserOptional.get().getId()));
         assertThat(userOptional)
