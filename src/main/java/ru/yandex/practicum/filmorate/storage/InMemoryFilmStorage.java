@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -53,10 +53,25 @@ public class InMemoryFilmStorage implements FilmStorage {
             oldFilm.setName(newFilm.getName());
             oldFilm.setDescription(newFilm.getDescription());
             oldFilm.setReleaseDate(newFilm.getReleaseDate());
-            oldFilm.setDuration(Duration.ofSeconds(newFilm.getDuration()));
+            oldFilm.setDuration(newFilm.getDuration());
             log.debug("Изменен фильм", oldFilm);
             return oldFilm;
         }
         throw new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден");
+    }
+
+    @Override
+    public void addLike(long filmId, long userId) {
+
+    }
+
+    @Override
+    public void deleteLike(long filmId, long userId) {
+
+    }
+
+    @Override
+    public Collection<Film> topFilm(int count) {
+        return List.of();
     }
 }

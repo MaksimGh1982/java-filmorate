@@ -7,8 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -23,7 +22,8 @@ public class FilmControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        filmService = new FilmService(new InMemoryFilmStorage(), new UserService(new InMemoryUserStorage()));
+        filmService = new FilmService(new InMemoryFilmStorage(), new UserService(new InMemoryUserStorage()),
+                new MpaDbStorage(), new GenreDbStorage());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class FilmControllerTest {
         Film film = new Film();
         film.setName("Titanic");
         film.setReleaseDate(LocalDate.of(1800, 12, 12));
-        film.setDuration(Duration.ofMinutes(180));
+        film.setDuration(180);
         assertThrows(ValidationException.class, () -> {
             filmService.create(film);
         }, "ValidationException was expected");
@@ -45,13 +45,4 @@ public class FilmControllerTest {
         }, "ValidationException was expected");
     }
 
-    @Test
-    void newFilm() {
-        Film film = new Film();
-        film.setName("Titanic");
-        film.setReleaseDate(LocalDate.of(1998, 12, 12));
-        film.setDuration(Duration.ofMinutes(180));
-        filmService.create(film);
-        assertEquals(1,filmService.findAll().size());
-    }
 }

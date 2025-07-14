@@ -4,26 +4,27 @@ import lombok.Data;
 
 import java.time.Duration;
 import java.time.LocalDate;
+
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Film.
  */
 @Data
 public class Film {
-    Long id;
+    long id;
     String name;
     String description;
     LocalDate releaseDate;
-    Duration duration;
-    Set<Long> likes;
-
-    public long getDuration() {
-        return duration.getSeconds();
-    }
+    long duration;
+    Mpa mpa;
+    Set<Genre> genres;
 
     public Film() {
-        likes = new HashSet<>();
+        genres = new TreeSet<>(Comparator.comparing(Genre::getId));
+        mpa = new Mpa();
     }
 }

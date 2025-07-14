@@ -44,7 +44,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void newFilm() {
+    void newUser() {
         User user = new User();
         user.setEmail("Titanic@mail.ru");
         user.setLogin("login");
