@@ -29,7 +29,6 @@ class FilmoRateFilmTests {
         newFilm.setReleaseDate(LocalDate.of(1980, 12, 12));
         newFilm.setDuration(120);
         Optional<Film> filmOptional = Optional.ofNullable(filmStorage.create(newFilm));
-
         assertThat(filmOptional).isPresent();
     }
 
