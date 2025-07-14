@@ -67,7 +67,7 @@ public class FilmDbStorage implements FilmStorage {
                                     "m.id mpa_id,m.NAME mpa_name,g.ID genre_id,g.NAME genre_name, " +
                                  "FROM FILMORATE.FILM f " +
                                      "LEFT JOIN FILMORATE.МРА m ON f.MPA_ID=m.id " +
-                                     "LEFT JOIN FILMORATE.FILMGENRE fg ON fg.filmid=f.id "+
+                                     "LEFT JOIN FILMORATE.FILMGENRE fg ON fg.filmid=f.id " +
                                      "LEFT JOIN FILMORATE.GENRE g ON fg.genreid=g.id order by f.id,g.ID", mapper);
         List<Film> films = mapper.getResult();
         return films;
@@ -124,7 +124,7 @@ public class FilmDbStorage implements FilmStorage {
         log.info("удалить лайк фильму id=" + filmId + " от пользователя id=" + userId);
         int result = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM FILMORATE.likes where filmid = ? and UserId = ? ", Integer.class, filmId, userId);
         if (result > 0) {
-            jdbcTemplate.update (
+            jdbcTemplate.update(
                     "delete from FILMORATE.likes where  filmid = ? and UserId = ? ",
                     filmId, userId);
         } else {
@@ -145,8 +145,8 @@ public class FilmDbStorage implements FilmStorage {
                         "                        LEFT JOIN FILMORATE.FILMGENRE fg ON fg.filmid=f.id \n" +
                         "                        LEFT JOIN FILMORATE.GENRE g ON fg.genreid=g.id \n" +
                         "ORDER BY cnt desc, f.NAME \n" +
-                        "LIMIT ? \n"
-                , mapper, count);
+                        "LIMIT ? \n",
+                mapper, count);
         List<Film> films = mapper.getResult();
         return films;
     }
