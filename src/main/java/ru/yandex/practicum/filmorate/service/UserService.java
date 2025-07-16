@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.util.Collection;
 
 @Service
@@ -41,7 +39,6 @@ public class UserService {
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
-        validate(user);
         return userStorage.create(user);
     }
 
@@ -49,7 +46,6 @@ public class UserService {
         log.info("Обновить пользователя id = {}", newUser.getId());
         User oldUser = findUserById(newUser.getId());
         if (oldUser != null) {
-            validate(newUser);
             return userStorage.update(newUser);
         } else {
             throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", newUser.getId()));
@@ -86,36 +82,5 @@ public class UserService {
     public Collection<User> findAcrossFriends(long userId, long otherUserId) {
 
         return userStorage.findAcrossFriends(userId, otherUserId);
-    }
-
-    private void validate(User user) {
-        int i = 0;
-        /*if (user == null) {
-            throw new ValidationException("Новый пользователь должен быть указан");
-        }
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            log.error("Имейл должен быть указан");
-            throw new ValidationException("Имейл должен быть указан");
-        }
-
-        if (!user.getEmail().contains("@")) {
-            log.error("Имейл должен содержать символ @");
-            throw new ValidationException("Имейл должен содержать символ @");
-        }
-
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            log.error("Логин должен быть указан");
-            throw new ValidationException("Логин должен быть указан");
-        }
-
-        if (user.getLogin().contains(" ")) {
-            log.error("Логин не должен содержать пробел");
-            throw new ValidationException("Логин не должен содержать пробел");
-        }
-
-        if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("Дата рождения не может быть в будущем");
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }*/
     }
 }
