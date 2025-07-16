@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -34,15 +35,14 @@ public class UserDbStorage implements UserStorage {
         long userId = keyHolder.getKey().longValue();
         user.setId(userId);
 
-        log.debug("Добавлен пользователь", user);
+        log.debug("Добавлен пользователь {}", user);
         return user;
     }
 
     @Override
     public Collection<User> findAll() {
         UserRowMapper mapper = new UserRowMapper();
-        List<User> users = jdbcTemplate.query("SELECT * FROM FILMORATE.USERS", mapper);
-        return users;
+        return jdbcTemplate.query("SELECT * FROM FILMORATE.USERS", mapper);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserDbStorage implements UserStorage {
     public User findUserById(long id) {
         UserRowMapper mapper = new UserRowMapper();
         List<User> users = jdbcTemplate.query("SELECT * FROM FILMORATE.USERS where id = ?", mapper, id);
-        if (users.size() == 0) {
+        if (users.isEmpty()) {
             return null;
         } else {
             return users.getFirst();
@@ -85,21 +85,19 @@ public class UserDbStorage implements UserStorage {
     @Override
     public Collection<User> findAcrossFriends(long userId, long otherUserId) {
         UserRowMapper mapper = new UserRowMapper();
-        List<User> users = jdbcTemplate.query("SELECT u.* FROM FILMORATE.FRIENDS f " +
+        return jdbcTemplate.query("SELECT u.* FROM FILMORATE.FRIENDS f " +
                         "inner join FILMORATE.FRIENDS f1 on f.userId2 = f1.userId2 " +
                         "inner join FILMORATE.USERS u on u.id = f.userId2 " +
                         "where f.userId1 = ? and f1.userId1 = ?",
                 mapper, userId, otherUserId);
-        return users;
     }
 
     @Override
     public Collection<User> findFriends(long userId) {
         UserRowMapper mapper = new UserRowMapper();
-        List<User> users = jdbcTemplate.query("SELECT u.* FROM FILMORATE.FRIENDS f " +
+        return jdbcTemplate.query("SELECT u.* FROM FILMORATE.FRIENDS f " +
                 "inner join FILMORATE.USERS u on u.id = f.userId2" +
                 " where f.userId1 = ?", mapper, userId);
-        return users;
     }
 }
 

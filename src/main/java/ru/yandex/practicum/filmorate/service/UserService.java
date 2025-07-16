@@ -1,19 +1,23 @@
 package ru.yandex.practicum.filmorate.service;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Collection;
 
 @Service
 @Slf4j
+@Validated
 public class UserService {
     private final UserStorage userStorage;
 
@@ -28,11 +32,11 @@ public class UserService {
     }
 
     public User findUserById(long id) {
-        log.info("Пользователь id=" + id);
+        log.info("Пользователь id = {}", id);
         return userStorage.findUserById(id);
     }
 
-    public User create(User user) {
+    public User create(@Valid User user) {
         log.info("Создать пользователя");
         if (user.getName() == null) {
             user.setName(user.getLogin());
@@ -41,23 +45,23 @@ public class UserService {
         return userStorage.create(user);
     }
 
-    public User update(User newUser) {
-        log.info("Обновить пользователя id=" + newUser.getId());
+    public User update(@Valid User newUser) {
+        log.info("Обновить пользователя id = {}", newUser.getId());
         User oldUser = findUserById(newUser.getId());
         if (oldUser != null) {
             validate(newUser);
             return userStorage.update(newUser);
         } else {
-            throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
+            throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", newUser.getId()));
         }
 
     }
 
     public void addFriend(long userId, long friendId) {
         if (findUserById(userId) == null) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", userId));
         } else if (findUserById(friendId) == null) {
-            throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
+            throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", friendId));
         } else {
             userStorage.addFriend(userId, friendId);
         }
@@ -65,16 +69,16 @@ public class UserService {
 
     public void deleteFriend(long userId, long friendId) {
         if (findUserById(userId) == null) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", userId));
         } else if (findUserById(friendId) == null) {
-            throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
+            throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", friendId));
         }
         userStorage.deleteFriend(userId, friendId);
     }
 
     public Collection<User> findFriends(long userId) {
         if (findUserById(userId) == null) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(MessageFormat.format("Пользователь с id = {0} не найден", userId));
         }
         return userStorage.findFriends(userId);
     }
@@ -85,7 +89,8 @@ public class UserService {
     }
 
     private void validate(User user) {
-        if (user == null) {
+        int i = 0;
+        /*if (user == null) {
             throw new ValidationException("Новый пользователь должен быть указан");
         }
         if (user.getEmail() == null || user.getEmail().isBlank()) {
@@ -111,6 +116,6 @@ public class UserService {
         if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
             log.error("Дата рождения не может быть в будущем");
             throw new ValidationException("Дата рождения не может быть в будущем");
-        }
+        }*/
     }
 }

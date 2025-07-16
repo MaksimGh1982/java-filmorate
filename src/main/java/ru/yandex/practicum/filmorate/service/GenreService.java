@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 
 @Service
@@ -22,10 +23,10 @@ public class GenreService {
     }
 
     public Genre findGenreById(long id) {
-        log.info("Жанр id=" + id);
+        log.info("Жанр id = {}", id);
         Genre genre = genreStorage.findGenreById(id);
         if (genre == null) {
-            throw new NotFoundException("Жанр не найден");
+            throw new NotFoundException(MessageFormat.format("Жанр id = {0} не найден", id));
         } else {
             return genre;
         }

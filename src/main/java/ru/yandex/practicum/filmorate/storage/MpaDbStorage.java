@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.mapper.MpaRowMapper;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.Collection;
@@ -19,8 +20,7 @@ public class MpaDbStorage implements MpaStorage {
     @Override
     public Collection<Mpa> findAll() {
         MpaRowMapper mapper = new MpaRowMapper();
-        List<Mpa> mPas = jdbcTemplate.query("SELECT * FROM FILMORATE.МРА", mapper);
-        return mPas;
+        return jdbcTemplate.query("SELECT * FROM FILMORATE.МРА", mapper);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class MpaDbStorage implements MpaStorage {
         MpaRowMapper mapper = new MpaRowMapper();
         List<Mpa> mpas = jdbcTemplate.query("SELECT * FROM FILMORATE.МРА where id = ?", mapper, id);
 
-        if (mpas.size() == 0) {
+        if (mpas.isEmpty()) {
             return null;
         } else {
             return mpas.getFirst();

@@ -2,12 +2,12 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -22,13 +22,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    @Autowired
-    @Qualifier("UserDbStorage")
-    UserStorage userStorage;
-    @Autowired
-    GenreStorage genreStorage;
-    @Autowired
-    MpaStorage mpaStorage;
 
     @Override
     public Film create(Film film) {
@@ -55,7 +48,7 @@ public class FilmDbStorage implements FilmStorage {
                     filmId, genre.getId());
         }
 
-        log.debug("Добавлен фильм", film);
+        log.info("Добавлен фильм {}", film);
         return film;
     }
 
@@ -69,8 +62,7 @@ public class FilmDbStorage implements FilmStorage {
                                      "LEFT JOIN FILMORATE.МРА m ON f.MPA_ID=m.id " +
                                      "LEFT JOIN FILMORATE.FILMGENRE fg ON fg.filmid=f.id " +
                                      "LEFT JOIN FILMORATE.GENRE g ON fg.genreid=g.id order by f.id,g.ID", mapper);
-        List<Film> films = mapper.getResult();
-        return films;
+        return mapper.getResult();
     }
 
     @Override
@@ -88,7 +80,7 @@ public class FilmDbStorage implements FilmStorage {
                             "VALUES (?, ?)",
                     newFilm.getId(), genre.getId());
         }
-        log.debug("Обновлен фильм", newFilm);
+        log.info("Обновлен фильм {}", newFilm);
         return newFilm;
     }
 
@@ -102,7 +94,7 @@ public class FilmDbStorage implements FilmStorage {
                                                      "LEFT JOIN FILMORATE.FILMGENRE fg ON fg.filmid=f.id " +
                                                      "LEFT JOIN FILMORATE.GENRE g ON fg.genreid=g.id where f.id=?", mapper, id);
         List<Film> films = mapper.getResult();
-        if (films.size() == 0) {
+        if (films.isEmpty()) {
             return null;
         } else {
             return films.getFirst();
@@ -137,17 +129,14 @@ public class FilmDbStorage implements FilmStorage {
         log.info(count + " популярных фильмов");
         FilmRowMapper mapper = new FilmRowMapper();
         jdbcTemplate.query("SELECT f.ID film_id,f.NAME,f.DESCRIPTION,f.RELEASEDATE,f.DURATION,m.id mpa_id," +
-                        "       m.NAME mpa_name,g.ID genre_id,g.NAME genre_name,l.USERID like_user_id," +
-                        "       (SELECT count(*) FROM FILMORATE.LIKES WHERE filmid=f.id) cnt\n" +
+                        "       m.NAME mpa_name,g.ID genre_id,g.NAME genre_name \n" +
                         "                        FROM FILMORATE.FILM f \n" +
                         "                        LEFT JOIN FILMORATE.МРА m ON f.MPA_ID=m.id \n" +
-                        "                        LEFT JOIN FILMORATE.LIKES l ON f.id=l.filmid  \n" +
                         "                        LEFT JOIN FILMORATE.FILMGENRE fg ON fg.filmid=f.id \n" +
                         "                        LEFT JOIN FILMORATE.GENRE g ON fg.genreid=g.id \n" +
-                        "ORDER BY cnt desc, f.NAME \n" +
-                        "LIMIT ? \n",
+                        "                        INNER JOIN (SELECT count(*) cnt,FILMID filmid FROM FILMORATE.LIKES GROUP BY FILMID ORDER BY cnt DESC LIMIT ?) likes ON f.id = likes.FILMID \n" +
+                        "ORDER BY cnt desc, f.NAME \n",
                 mapper, count);
-        List<Film> films = mapper.getResult();
-        return films;
+        return mapper.getResult();
     }
 }
